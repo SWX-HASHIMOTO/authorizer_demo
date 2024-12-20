@@ -38,9 +38,7 @@ class TokenUtils(object):
                 "grant_type": "client_credentials",
             }
 
-            self.logger.info(
-                f"HTTPS Request:(POST) https://{self.auth0_domain}/oauth/token"
-            )
+            self.logger.info(f"HTTPS Request:(POST) https://{self.auth0_domain}/oauth/token")
             # Obtain token by HTTP request to Auth0
             conn = http.client.HTTPSConnection(self.auth0_domain)
             payload = json.dumps(payload_dic)
@@ -48,13 +46,7 @@ class TokenUtils(object):
             conn.request("POST", "/oauth/token", payload, headers)
             res = conn.getresponse()
             data = res.read()
-
-            # Edit token with type
-            dic = json.loads(data)
-            print(dic)
-            token = f"{dic["token_type"]} {dic["access_token"]}"
-
-            return token
+            return json.loads(data)
 
         except http.client.HTTPException as e:
             # Handle HTTP-related errors.
@@ -62,9 +54,7 @@ class TokenUtils(object):
 
             return {
                 "statusCode": 400,
-                "body": json.dumps(
-                    {"error": "HTTP error occurred", "details": str(e)}
-                ),
+                "body": json.dumps({"error": "HTTP error occurred", "details": str(e)}),
             }
 
         except Exception as e:
@@ -73,7 +63,5 @@ class TokenUtils(object):
 
             return {
                 "statusCode": 500,
-                "body": json.dumps(
-                    {"error": "Get token failed", "details": str(e)}
-                ),
+                "body": json.dumps({"error": "Get token failed", "details": str(e)}),
             }

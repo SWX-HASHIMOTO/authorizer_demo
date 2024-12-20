@@ -27,8 +27,9 @@ def token_utils():
 def token_utils_ng():
     """
     TokenUtils fixture for Exception
+    Set broken domains.
     """
-    token_utils = TokenUtils("TEST", CLIENT_SECRET, AUDIENCE, AUTH0_DOMAIN)
+    token_utils = TokenUtils(CLIENT_ID, CLIENT_SECRET, AUDIENCE, "////////")
     yield token_utils
 
 
@@ -82,7 +83,7 @@ def test_token_utils_success(
     result = token_utils.get_token()
 
     # Verify results.
-    assert result == "test_type test_token"
+    assert result == {"access_token": "test_token", "token_type": "test_type"}
 
     # Confirmation of HTTPS request. (Not actually sent)
     mock_https_conn.assert_called_once_with(AUTH0_DOMAIN)
@@ -97,7 +98,7 @@ def test_token_utils_success(
 
 @pytest.mark.exception
 @patch("authorizer.token_utils.http.client.HTTPSConnection")
-def test_token_utils_exception1(
+def test_token_utils_httpexception(
     mock_https_conn,
     token_utils,
     mock_conn_instance,
@@ -120,7 +121,7 @@ def test_token_utils_exception1(
 
 
 @pytest.mark.exception
-def test_token_utils_exception2(token_utils_ng):
+def test_token_utils_exception(token_utils_ng):
 
     # Anticipated messages
     ERROR_MESSAGE = "Get token failed"
