@@ -1,17 +1,29 @@
-import json
+import os
 import pytest
 
 from authorizer.app import lambda_handler
+from authorizer.token_utils import TokenUtils
 from unittest.mock import MagicMock
 
-TOKEN = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlRkYVFKMzk1OHZZQkN5cVVJQVBIOSJ9.eyJpc3MiOiJodHRwczovL2Rldi1xeTVnaGJ6YTdrend4cHVjLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJEZEYxQXN2VU1uaUZXazB5czhoa1RMNzV3MUpUZUVCbkBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9oY3lja3Ztd20yLmV4ZWN1dGUtYXBpLmFwLW5vcnRoZWFzdC0xLmFtYXpvbmF3cy5jb20vIiwiaWF0IjoxNzM0Njc5NjA4LCJleHAiOjE3MzQ3NjYwMDgsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6IkRkRjFBc3ZVTW5pRldrMHlzOGhrVEw3NXcxSlRlRUJuIn0.woRn3nZeUxzvz_LT3PS1lDsGQzgBiV-xMfp3Y5JvGbWTDDeY42dyLBGYm-N6mdmHE2TF2oW9k-wsfqi5gIKUqfLaxbzt9dso3MeRoUPQOsxylo2rvk3E9b9tZd3dhkFc2o2yPrtKgdc7vkLu3CNh7sHtKSQ7AsAtJ8B5NA3YFO9qdaQGaWabHsVF7-PAmO82-G_DTatff53Q_sxYrwVgt1I55BDdtfKh2sv0a1BJuZ9l6gasw1S0wOEsS8NmXC_1fNponKdJaLeHKSZJxkd7E4gGEtZdEARUtbZ_kp2k53VpfCV5c-WlESfRIufwYpOw_6A6dI0RtaagUwtBj6zziA"
+# Get value from environment variable
+AUDIENCE = os.getenv("AUDIENCE")
+AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 
 @pytest.fixture
-def test_event():
+def access_token():
+    token_utils = TokenUtils(CLIENT_ID, CLIENT_SECRET, AUDIENCE, AUTH0_DOMAIN)
+    response = token_utils.get_token()
+    return f"{response["token_type"]} {response["access_token"]}"
+
+
+@pytest.fixture
+def test_event(access_token):
     return {
         "type": "TOKEN",
-        "authorizationToken": TOKEN,
+        "authorizationToken": access_token,
         "methodArn": "",
     }
 
