@@ -1,6 +1,20 @@
+from dotenv import load_dotenv
 import json
+import os
 import logging
 import http.client
+
+if not os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+    load_dotenv(verbose=True)
+    dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+    print(dotenv_path)
+    load_dotenv(dotenv_path)
+
+# Get value from environment variable
+AUDIENCE = os.getenv("AUDIENCE")
+AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+CLIENT_ID = os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 
 class TokenUtils(object):
@@ -8,11 +22,11 @@ class TokenUtils(object):
     Class that issues Token for Auth0.
     """
 
-    def __init__(self, client_id, client_secret, audience, auth0_domain):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.audience = audience
-        self.auth0_domain = auth0_domain
+    def __init__(self):
+        self.client_id = CLIENT_ID
+        self.client_secret = CLIENT_SECRET
+        self.audience = AUDIENCE
+        self.auth0_domain = AUTH0_DOMAIN
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
 

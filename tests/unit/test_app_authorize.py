@@ -12,11 +12,17 @@ CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 
 
-@pytest.fixture
+# @pytest.fixture
+# def access_token():
+#     token_utils = TokenUtils()
+#     response = token_utils.get_token()
+#     return f"{response["token_type"]} {response["access_token"]}"
+
+
+@pytest.fixture(scope="module")
 def access_token():
-    token_utils = TokenUtils(CLIENT_ID, CLIENT_SECRET, AUDIENCE, AUTH0_DOMAIN)
-    response = token_utils.get_token()
-    return f"{response["token_type"]} {response["access_token"]}"
+    with open("./tests/token.txt", "r") as file:
+        return file.read()
 
 
 @pytest.fixture

@@ -4,23 +4,29 @@ from unittest.mock import patch
 
 from authorizer.libs.auth import authenticate
 from authorizer.libs.auth import get_signing_key
-from authorizer.token_utils import TokenUtils
+
+# from authorizer.token_utils import TokenUtils
 
 # from unittest.mock import MagicMock
 TOKEN_EXPIRED = "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlRkYVFKMzk1OHZZQkN5cVVJQVBIOSJ9.eyJpc3MiOiJodHRwczovL2Rldi1xeTVnaGJ6YTdrend4cHVjLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJ2dGdQakxSMDgzbVRMT3l3UHJqZFZvaFRLb21CMTdXTUBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly85Y21mMXBwNWo1LmV4ZWN1dGUtYXBpLmFwLW5vcnRoZWFzdC0xLmFtYXpvbmF3cy5jb20vIiwiaWF0IjoxNzI5NTc3OTQ5LCJleHAiOjE3Mjk2NjQzNDksImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsImF6cCI6InZ0Z1BqTFIwODNtVExPeXdQcmpkVm9oVEtvbUIxN1dNIn0.Af2d4XT0aMBf2x8Ibi0cWP2fCXvk_XMyy6MSgd9eZigjHNAMK5Egnz2CcDAlhGuOn-7xAnt2K8BFlKpT5msg9gqNbSiYSlhAu8k7fFwu4mTztCDCHA4s8cD0EZJ9z8RbGOgH9Ya8NrURALzkNQnp8D7ziYWEfS5B30ItX1I3jk0XKbABxjKDuu6QdIPaNhJw8VSBX60oHArJozKbPLu5z07syNrk14iIqw2NwPSuSXx6z8CP8hozTk9ji7Zbcr3OReyZymfoVHQiGm8EMJlG70RvJrjBtwPEOO0Cq8QoG-Wcj1oeiDC1MsdN-0LeBPeWJWzxVkEiTE-l0jWb5S8oZA"
 
 # Get value from environment variable
-AUDIENCE = os.getenv("AUDIENCE")
-AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
-CLIENT_ID = os.getenv("CLIENT_ID")
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+# AUDIENCE = os.getenv("AUDIENCE")
+# AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+# CLIENT_ID = os.getenv("CLIENT_ID")
+# CLIENT_SECRET = os.getenv("CLIENT_SECRET")
+
+# @pytest.fixture
+# def access_token():
+#     token_utils = TokenUtils()
+#     response = token_utils.get_token()
+#     return f"{response["token_type"]} {response["access_token"]}"
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def access_token():
-    token_utils = TokenUtils(CLIENT_ID, CLIENT_SECRET, AUDIENCE, AUTH0_DOMAIN)
-    response = token_utils.get_token()
-    return f"{response["token_type"]} {response["access_token"]}"
+    with open("./tests/token.txt", "r") as file:
+        return file.read()
 
 
 @pytest.fixture

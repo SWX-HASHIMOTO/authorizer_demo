@@ -96,7 +96,7 @@ export PYTHONPATH="./layers/python:$PYTHONPATH"
 If you want to refer to Layers' directory locally, return to the Root path and then execute it.
 
 ``` sh
-cat_iot_toilet_api > python .\app\main.py
+python .\app\main.py
 ```
 
 To ZIP the Layer with Powershell, execute the following command.
@@ -106,10 +106,22 @@ The created ZIP is stored in S3 (cat-iot-resources-develop) to be set as a layer
 Compress-Archive -Path .\layers\python -DestinationPath python_layer_v9.zip
 ```
 
-Pytest commond
+Pyenv with pipenv
 
 ``` sh
+pyenv virtualenv 3.12.1 example_demo
 
-pyenv activate your_env
-pytest --cov -v --cov-report=xml ./tests
+pyenv activate example_demo
+
+pip install pipenv
+
+pipenv install --dev
+
+```
+
+use pytest
+
+``` sh
+# Enable TESTPATH by importing the contents of setup.py.
+pipenv install -e .
 ```
